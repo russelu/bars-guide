@@ -6,6 +6,7 @@ var selected;
 
 var defaultIcon;
 var highlightedIcon;
+var bounceAnimation;
 
 function initMap() {
 	if (typeof window.google === 'object' && typeof window.google.maps === 'object') {
@@ -40,6 +41,7 @@ function initMap() {
             // Create a "highlighted location" marker color for when the user
 			// mouses over the marker.
             highlightedIcon = makeMarkerIcon('FFFF24');
+            bounceAnimation = google.maps.Animation.BOUNCE;
 	} else {
 		ViewModel.mapUnavailable(true);
 	}
@@ -59,7 +61,6 @@ function initMap() {
     	var marker = new google.maps.Marker({
       		position: place.geometry.location,
         	map: map,
-        	animation: google.maps.Animation.DROP,
         	title: place.name,
         	icon: defaultIcon
     	});
@@ -85,6 +86,10 @@ function populateInfoWindow(marker, infowindow) {
     	selected = marker;
     	selected.setIcon(highlightedIcon);
         infowindow.marker = marker;
+
+	    // make marker bouncing for 750ms
+	    marker.setAnimation(bounceAnimation);
+    	setTimeout(function(){ marker.setAnimation(null); }, 750);
 
         // asynchronized Foursquare API call
         // add venue info & venue picture
@@ -112,6 +117,9 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
            	infowindow.setMarker = null;
         })
+        // move map center to selected marker
+	    map.panTo(marker.getPosition())
+
     }
 }
 
