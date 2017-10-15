@@ -79,6 +79,10 @@
     <div class="container">
       <div class="options-box">
         <h1>Bars around Washtenaw Area</h1>
+        <!-- if google maps cannot be loaded, alert user -->
+        <div class="no-map" data-bind="visible: mapUnavailable">
+          <p>Cannot load Google Maps API, please check your network connection and try again.</p>
+        </div>
         <div>
           <input id="show-listings" type="button" value="Show Listings">
           <input id="hide-listings" type="button" value="Hide Listings">
@@ -116,43 +120,20 @@
           <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
           <input id="go-places" type="button" value="Go">
         </div>
+        <div style="overflow:scroll; max-height:40%;">
+          <ul id="place-list" data-bind="foreach: placeList">
+            <li data-bind="text: title, click: $parent.popInfoWindow"></li>
+          </ul>
+        </div>
       </div>
       <div id="map"></div>
     </div>
     <script src="js/lib/knockout-3.4.2.js"></script>
+    <script src="js/lib/jquery-3.2.1.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/maps.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA0EO1Jh_30Z9dekN_pY-0juEQ7av4rk5Q&v=3&callback=initMap">
    </script>
-    <script src="js/app.js"></script>
-    <script>
-        function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 42.2808, lng: -83.7430},
-                zoom: 12
-            });
-
-            var placeList = ko.observableArray([]);
-
-            var service = new google.maps.places.PlacesService(map);
-            service.nearbySearch({
-                location: {lat: 42.2808, lng: -83.7430},
-                radius: 2000,
-                rankby: 'distance',
-                type: 'bar'
-            }, function(results, status) {
-              if (status == google.maps.places.PlacesServiceStatus.OK) {
-                results.forEach(function(bar){
-                    placeList.push(new Place(bar))
-                });
-              } else {
-                default_places.forEach(function(bar){
-                    placeList.push(new Place(bar))
-                });
-                window.alert('We could not find any bars thru Google Maps API. Using default database.');
-              }
-            });
-
-        };
-    </script>
 </body>
 </html>

@@ -1,8 +1,3 @@
-var Place = function(data) {
-	this.location = ko.observable(data.geometry.location);
-
-};
-
 var default_places = [
 	{
 		"geometry" : {
@@ -51,11 +46,15 @@ var default_places = [
 	}
 ]
 
-var ViewModel = function() {
-	var self = this;
+var ViewModel = {
 	
-	
-	
+  placeList: ko.observableArray([]),
+  mapUnavailable: ko.observable(false),
+
+  popInfoWindow: function() {
+      populateInfoWindow(this, largeInfowindow);
+  }
 };
 
-ko.applyBindings(new ViewModel);
+
+ko.applyBindings(ViewModel);
