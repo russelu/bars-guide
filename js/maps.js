@@ -2,13 +2,15 @@ var map;
 var service;
 var largeInfowindow;
 var bounds;
-var selected;
+var current_marker;
 
 var defaultIcon;
 var highlightedIcon;
 var bounceAnimation;
 
 function initMap() {
+	// First check if Google Maps API successfully loaded
+	// https://stackoverflow.com/questions/9228958/how-to-check-if-google-maps-api-is-loaded
 	if (typeof window.google === 'object' && typeof window.google.maps === 'object') {
 		map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 42.2808, lng: -83.7430},
@@ -80,21 +82,26 @@ function initMap() {
 
 function populateInfoWindow(marker, infowindow) {
     if (infowindow.marker != marker) {
-    	if (selected != null) {
-    		selected.setIcon(defaultIcon);
+    	if (current_marker != null) {
+    		current_marker.setIcon(defaultIcon);
     	}
-    	selected = marker;
-    	selected.setIcon(highlightedIcon);
+    	current_marker = marker;
+    	current_marker.setIcon(highlightedIcon);
         infowindow.marker = marker;
 
 	    // make marker bouncing for 750ms
+	    // https://stackoverflow.com/questions/7339200/bounce-a-pin-in-google-maps-once
 	    marker.setAnimation(bounceAnimation);
     	setTimeout(function(){ marker.setAnimation(null); }, 750);
 
         // asynchronized Foursquare API call
         // add venue info & venue picture
+        // Getting location parameters
+        // Notice: lat & lng from Google Maps response JSON use type of function
+        // so here we have to pass the return values
         var lat = marker.position.lat();
         var lng = marker.position.lng();
+        // First search via F2 API to find the nearest venue to this location
         var f2_url = 'https://api.foursquare.com/v2/venues/search?ll='+
         	lat+','+lng+'&client_id='+f2_id+'&client_secret='+f2_secret+'&llAcc=1&v=20171003';
         $.getJSON(f2_url, function(data1){
@@ -102,10 +109,13 @@ function populateInfoWindow(marker, infowindow) {
         	var venue_query_url = 'https://api.foursquare.com/v2/venues/'+venue_id+'?client_id='
         		+f2_id+'&client_secret='+f2_secret+'&v=20171003';
         	$.getJSON(venue_query_url, function(data2){
+        		// Get F2 rating and url from response
         		var rating = data2.response.venue.rating;
         		var f2Url = data2.response.venue.canonicalUrl;
         		infowindow.setContent('<div>' + marker.title + '</div><div><a href="'+f2Url+'">Foursquare Rating: '+rating+'</a></div>');
         	}).fail(function(e){
+        		// This error handler was '.error()' in course
+        		// which was quite misleading
         		infowindow.setContent('<div>' + marker.title + '</div></div><div>Foursquare Venue API cannot loaded</div>');
         	})
         }).fail(function(e){
@@ -117,12 +127,13 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
            	infowindow.setMarker = null;
         })
-        // move map center to selected marker
+        // move map center to current_marker
 	    map.panTo(marker.getPosition())
 
     }
 }
 
+// this is an Assasin's Creed theme Google Maps style
 var styles = [
     {
         "featureType": "all",

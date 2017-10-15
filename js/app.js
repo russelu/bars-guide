@@ -48,13 +48,35 @@ var default_places = [
 
 var ViewModel = {
 	
+  // Initialize array of markers
   placeList: ko.observableArray([]),
+  // Once this property set to TRUE, turn the error prompt to visible in html
   mapUnavailable: ko.observable(false),
 
   popInfoWindow: function() {
       populateInfoWindow(this, largeInfowindow);
-  }
+  },
+
+  query: ko.observable('')
+  
 };
 
+ViewModel.filtered = ko.computed(function(){
+    // filter the placeList according to data-binded query observable
+    // https://stackoverflow.com/questions/29551997/knockout-search-filter
+    var self = this;
+    return ko.utils.arrayFilter(self.placeList(), function (marker) {
+      if (marker.title.toLowerCase().indexOf(self.query().toLowerCase()) >= 0) {
+        marker.setMap(map);
+      } else {
+        marker.setMap(null);
+      }
+      return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
+    })
+  }, ViewModel);
+
+function googleError() {
+  ViewModel.mapUnavailable(true);
+}
 
 ko.applyBindings(ViewModel);

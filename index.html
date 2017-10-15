@@ -3,125 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Bars in Michigan Washtenaw County</title>
-        <style>
-      html,
-      body {
-        font-family: Arial, sans-serif;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        height: 100%;
-        position: relative;
-      }
-      input {
-        font-size: 12px;
-      }
-      h1 {
-        color: #525454;
-        font-size: 22px;
-        margin: 0 0 10px 0;
-        text-align: center;
-      }
-      #hide-listings,
-      #show-listings {
-        width: 48%;
-      }
-      hr {
-        background: #D0D7D9;
-        height: 1px;
-        margin: 20px 0 20px 0;
-        border: none;
-      }
-      #map {
-        bottom:0px;
-        height: 100%;
-        left: 362px;
-        position: absolute;
-        right: 0px;
-      }
-      .options-box {
-        background: #fff;
-        border: 1px solid #999;
-        border-radius: 3px;
-        height: 100%;
-        line-height: 35px;
-        padding: 10px 10px 30px 10px;
-        text-align: left;
-        width: 340px;
-      }
-      #pano {
-        width: 200px;
-        height: 200px;
-      }
-      #places-search,
-      #search-within-time-text {
-        width: 84%;
-      }
-      .text {
-        font-size: 12px;
-      }
-      #toggle-drawing {
-        width: 27%;
-        position: relative;
-        margin-left: 10px;
-      }
-      #zoom-to-area-text {
-        width: 70%;
-      }
-      #zoom-to-area {
-        width: 24%;
-      }
-    </style>
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
       <div class="options-box">
         <h1>Bars around Washtenaw Area</h1>
         <!-- if google maps cannot be loaded, alert user -->
-        <div class="no-map" data-bind="visible: mapUnavailable">
+        <!-- inspirated by Christianq010 -->
+        <div data-bind="visible: mapUnavailable">
           <p>Cannot load Google Maps API, please check your network connection and try again.</p>
         </div>
-        <div>
-          <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
-          <hr>
-          <span class="text"> Draw a shape to search within it for homes!</span>
-          <input id="toggle-drawing"  type="button" value="Drawing Tools">
-        </div>
         <hr>
         <div>
-          <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
-          <input id="zoom-to-area" type="button" value="Zoom">
+          <input id="filter-search" class="form-control" placeholder="Filter here..." type="text" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
         </div>
         <hr>
-        <div>
-          <span class="text"> Within </span>
-          <select id="max-duration">
-            <option value="10">10 min</option>
-            <option value="15">15 min</option>
-            <option value="30">30 min</option>
-            <option value="60">1 hour</option>
-          </select>
-          <select id="mode">
-            <option value="DRIVING">drive</option>
-            <option value="WALKING">walk</option>
-            <option value="BICYCLING">bike</option>
-            <option value="TRANSIT">transit ride</option>
-          </select>
-          <span class="text">of</span>
-          <input id="search-within-time-text" type="text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
-          <input id="search-within-time" type="button" value="Go">
-        </div>
-        <hr>
-        <div>
-          <span class="text">Search for nearby places</span>
-          <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
-          <input id="go-places" type="button" value="Go">
-        </div>
         <div style="overflow:scroll; max-height:40%;">
-          <ul id="place-list" data-bind="foreach: placeList">
+          <ul id="place-list" data-bind="foreach: filtered">
             <li data-bind="text: title, click: $parent.popInfoWindow"></li>
           </ul>
         </div>
@@ -133,7 +32,7 @@
     <script src="js/app.js"></script>
     <script src="js/maps.js"></script>
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA0EO1Jh_30Z9dekN_pY-0juEQ7av4rk5Q&v=3&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing,places&key=AIzaSyA0EO1Jh_30Z9dekN_pY-0juEQ7av4rk5Q&v=3&callback=initMap" onerror="googleError()">
    </script>
 </body>
 </html>
