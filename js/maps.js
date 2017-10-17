@@ -98,7 +98,7 @@ function initMap() {
 function populateInfoWindow(marker, infowindow) {
     // first check if this is a new marker clicked
     if (infowindow.marker != marker) {
-    	if (current_marker !== null) {
+    	if (current_marker !== undefined) {
             // set previous clicked marker to default icon
     		current_marker.setIcon(defaultIcon);
     	}
