@@ -30,12 +30,12 @@ function initMap() {
                 // if getting any results, create markers accordingly
            		results.forEach(function(bar){
            			createMarker(bar);
-           		})
+           		});
             } else {
                 // if no response received, use default list
             	default_places.forEach(function(bar){
            			createMarker(bar);
-           		})
+           		});
                 // alert user
                 window.alert('We could not find any bars thru Google Maps API. Using default database.');
               }
@@ -54,7 +54,7 @@ function initMap() {
 	} else {
         // handle google map error
 		ViewModel.mapUnloaded(true);
-	};
+	}
 
     // this part is from course
     // call this function to make a default or highlight icon
@@ -67,7 +67,7 @@ function initMap() {
         	new google.maps.Point(10, 34),
         	new google.maps.Size(21,34));
     	return markerImage;
-	};
+	}
 
     // creating marker and storing its info in ViewModel
 	function createMarker(place) {
@@ -91,14 +91,14 @@ function initMap() {
         	populateInfoWindow(this, largeInfowindow);
     	});
     	bounds.extend(marker.position);
-	};
-};
+	}
+}
 
 // active when user click on either marker or list
 function populateInfoWindow(marker, infowindow) {
     // first check if this is a new marker clicked
     if (infowindow.marker != marker) {
-    	if (current_marker != null) {
+    	if (current_marker !== null) {
             // set previous clicked marker to default icon
     		current_marker.setIcon(defaultIcon);
     	}
@@ -128,8 +128,7 @@ function populateInfoWindow(marker, infowindow) {
             // select the first returned venue
         	var venue_id = data1.response.venues[0].id;
             // another Foursquare API request here to gather more info of selected venue
-        	var venue_query_url = 'https://api.foursquare.com/v2/venues/'+venue_id+'?client_id='
-        		+f2_id+'&client_secret='+f2_secret+'&v=20171003';
+        	var venue_query_url = 'https://api.foursquare.com/v2/venues/'+venue_id+'?client_id='+f2_id+'&client_secret='+f2_secret+'&v=20171003';
         	$.getJSON(venue_query_url, function(data2){
         		// Get Foursquare rating and url from response
         		var rating = data2.response.venue.rating;
@@ -139,21 +138,21 @@ function populateInfoWindow(marker, infowindow) {
         		// This error handler was '.error()' in course
         		// which was quite misleading
         		infowindow.setContent('<div>' + marker.title + '</div></div><div>Foursquare Venue API cannot loaded</div>');
-        	})
+        	});
         }).fail(function(e){
         	infowindow.setContent('<div>' + marker.title + '</div></div><div>Foursquare API cannot loaded</div>');
-        })
+        });
 
         // Open the infowindow on the correct marker.
         infowindow.open(map, marker);
         infowindow.addListener('closeclick', function() {
            	infowindow.setMarker = null;
-        })
+        });
         // move map center to current_marker
-	    map.panTo(marker.getPosition())
+	    map.panTo(marker.getPosition());
 
-    };
-};
+    }
+}
 
 // this is an Assasin's Creed theme Google Maps style
 var styles = [

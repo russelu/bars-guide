@@ -78,13 +78,13 @@ ViewModel.filtered = ko.computed(function(){
       }
       // return matching list
       return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
-    })
+    });
   }, ViewModel);
 
 // handle Google maps error
 function googleError() {
   ViewModel.mapUnloaded(true);
-};
+}
 
 // apply data binding via Knockout
 ko.applyBindings(ViewModel);
