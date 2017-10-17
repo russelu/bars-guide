@@ -54,7 +54,7 @@ function initMap() {
 	} else {
         // handle google map error
 		ViewModel.mapUnloaded(true);
-	}
+	};
 
     // this part is from course
     // call this function to make a default or highlight icon
@@ -67,7 +67,7 @@ function initMap() {
         	new google.maps.Point(10, 34),
         	new google.maps.Size(21,34));
     	return markerImage;
-	}
+	};
 
     // creating marker and storing its info in ViewModel
 	function createMarker(place) {
@@ -91,8 +91,8 @@ function initMap() {
         	populateInfoWindow(this, largeInfowindow);
     	});
     	bounds.extend(marker.position);
-	}
-}
+	};
+};
 
 // active when user click on either marker or list
 function populateInfoWindow(marker, infowindow) {
@@ -152,8 +152,8 @@ function populateInfoWindow(marker, infowindow) {
         // move map center to current_marker
 	    map.panTo(marker.getPosition())
 
-    }
-}
+    };
+};
 
 // this is an Assasin's Creed theme Google Maps style
 var styles = [

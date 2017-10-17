@@ -1,14 +1,14 @@
 // default list of place info, in case anything breaks
 var default_places = [
-	{
-		"geometry" : {
+    {
+        "geometry" : {
             "location" : {
                "lat" : 42.2791584,
                "lng" : -83.7484618
             }
         },
-		"name": "Jolly Pumpkin Café & Brewery"
-	},
+        "name": "Jolly Pumpkin Café & Brewery"
+    },
 	{
 		"geometry" : {
             "location" : {
@@ -45,7 +45,7 @@ var default_places = [
         },
         "name" : "Black Pearl Ann Arbor"
 	}
-]
+];
 
 var ViewModel = {
 	
@@ -84,7 +84,7 @@ ViewModel.filtered = ko.computed(function(){
 // handle Google maps error
 function googleError() {
   ViewModel.mapUnloaded(true);
-}
+};
 
 // apply data binding via Knockout
 ko.applyBindings(ViewModel);
