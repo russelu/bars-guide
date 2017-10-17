@@ -33,7 +33,7 @@ function initMap() {
            		});
             } else {
                 // if no response received, use default list
-            	default_places.forEach(function(bar){
+            	defaultPlaceList.forEach(function(bar){
            			createMarker(bar);
            		});
                 // alert user
