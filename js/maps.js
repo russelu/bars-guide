@@ -1,8 +1,8 @@
 var map;
-var service;
+var googlePlacesService;
 var largeInfowindow;
 var bounds;
-var current_marker;
+var currentMarker;
 
 var defaultIcon;
 var highlightedIcon;
@@ -19,8 +19,8 @@ function initMap() {
         });
         // this is a new google maps api request
         // to request a list of bars around Washtenaw County, Michigan
-        service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
+        googlePlacesService = new google.maps.places.PlacesService(map);
+        googlePlacesService.nearbySearch({
             location: {lat: 42.2808, lng: -83.7430},
             radius: 2000,
             rankby: 'distance',
@@ -98,14 +98,14 @@ function initMap() {
 function populateInfoWindow(marker, infowindow) {
     // first check if this is a new marker clicked
     if (infowindow.marker != marker) {
-    	if (current_marker !== undefined) {
+    	if (currentMarker !== undefined) {
             // set previous clicked marker to default icon
-    		current_marker.setIcon(defaultIcon);
+    		currentMarker.setIcon(defaultIcon);
     	}
         // set current marker
-    	current_marker = marker;
+    	currentMarker = marker;
         // highlight current marker
-    	current_marker.setIcon(highlightedIcon);
+    	currentMarker.setIcon(highlightedIcon);
         // change infowindow to point to current marker
         infowindow.marker = marker;
 
@@ -131,8 +131,10 @@ function populateInfoWindow(marker, infowindow) {
         	var venue_query_url = 'https://api.foursquare.com/v2/venues/'+venue_id+'?client_id='+f2_id+'&client_secret='+f2_secret+'&v=20171003';
         	$.getJSON(venue_query_url, function(data2){
         		// Get Foursquare rating and url from response
-        		var rating = data2.response.venue.rating;
-        		var f2Url = data2.response.venue.canonicalUrl;
+        		var rating;
+        		var f2Url;
+			data2.response.venue.rating ? rating = data2.response.venue.rating : rating = 'No rating available';
+			data2.response.venue.canonicalUrl ? f2Url = data2.response.venue.canonicalUrl : f2Url = '#';
         		infowindow.setContent('<div>' + marker.title + '</div><div><a href="'+f2Url+'">Foursquare Rating: '+rating+'</a></div>');
         	}).fail(function(e){
         		// This error handler was '.error()' in course
@@ -148,7 +150,7 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.addListener('closeclick', function() {
            	infowindow.setMarker = null;
         });
-        // move map center to current_marker
+        // move map center to currentMarker
 	    map.panTo(marker.getPosition());
 
     }
