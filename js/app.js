@@ -1,5 +1,5 @@
 // default list of place info, in case anything breaks
-var default_places = [
+var defaultPlaceList = [
     {
         "geometry" : {
             "location" : {
