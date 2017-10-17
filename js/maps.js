@@ -53,7 +53,7 @@ function initMap() {
             bounceAnimation = google.maps.Animation.BOUNCE;
 	} else {
         // handle google map error
-		ViewModel.mapUnavailable(true);
+		ViewModel.mapUnloaded(true);
 	}
 
     // this part is from course

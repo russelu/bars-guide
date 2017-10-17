@@ -52,7 +52,7 @@ var ViewModel = {
   // Initialize array of markers
   placeList: ko.observableArray([]),
   // Once this property set to TRUE, turn the error prompt to visible in html
-  mapUnavailable: ko.observable(false),
+  mapUnloaded: ko.observable(false),
 
   // call populateInfo if clicking on the list
   popInfoWindow: function() {
@@ -83,7 +83,7 @@ ViewModel.filtered = ko.computed(function(){
 
 // handle Google maps error
 function googleError() {
-  ViewModel.mapUnavailable(true);
+  ViewModel.mapUnloaded(true);
 }
 
 // apply data binding via Knockout
