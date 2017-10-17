@@ -1,3 +1,4 @@
+// default list of place info, in case anything breaks
 var default_places = [
 	{
 		"geometry" : {
@@ -53,10 +54,12 @@ var ViewModel = {
   // Once this property set to TRUE, turn the error prompt to visible in html
   mapUnavailable: ko.observable(false),
 
+  // call populateInfo if clicking on the list
   popInfoWindow: function() {
       populateInfoWindow(this, largeInfowindow);
   },
 
+  // text input of filter
   query: ko.observable('')
   
 };
@@ -67,16 +70,21 @@ ViewModel.filtered = ko.computed(function(){
     var self = this;
     return ko.utils.arrayFilter(self.placeList(), function (marker) {
       if (marker.title.toLowerCase().indexOf(self.query().toLowerCase()) >= 0) {
+        // make matching marker visible
         marker.setMap(map);
       } else {
+        // hide those not matching
         marker.setMap(null);
       }
+      // return matching list
       return marker.title.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
     })
   }, ViewModel);
 
+// handle Google maps error
 function googleError() {
   ViewModel.mapUnavailable(true);
 }
 
+// apply data binding via Knockout
 ko.applyBindings(ViewModel);

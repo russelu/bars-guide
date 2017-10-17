@@ -17,6 +17,8 @@ function initMap() {
             zoom: 15,
             styles: styles
         });
+        // this is a new google maps api request
+        // to request a list of bars around Washtenaw County, Michigan
         service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
             location: {lat: 42.2808, lng: -83.7430},
@@ -25,18 +27,23 @@ function initMap() {
             type: 'bar'
         }, function(results, status) {
            	if (status == google.maps.places.PlacesServiceStatus.OK) {
+                // if getting any results, create markers accordingly
            		results.forEach(function(bar){
            			createMarker(bar);
            		})
             } else {
+                // if no response received, use default list
             	default_places.forEach(function(bar){
            			createMarker(bar);
            		})
+                // alert user
                 window.alert('We could not find any bars thru Google Maps API. Using default database.');
               }
             });
 
+            // declare infowindow
             largeInfowindow = new google.maps.InfoWindow();
+            // declare map bounds
             bounds = new google.maps.LatLngBounds();
 			// Style the markers a bit. This will be our listing marker icon.
             defaultIcon = makeMarkerIcon('0091ff');
@@ -45,9 +52,12 @@ function initMap() {
             highlightedIcon = makeMarkerIcon('FFFF24');
             bounceAnimation = google.maps.Animation.BOUNCE;
 	} else {
+        // handle google map error
 		ViewModel.mapUnavailable(true);
 	}
 
+    // this part is from course
+    // call this function to make a default or highlight icon
 	function makeMarkerIcon(markerColor) {
     	var markerImage = new google.maps.MarkerImage(
         	'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
@@ -59,6 +69,7 @@ function initMap() {
     	return markerImage;
 	}
 
+    // creating marker and storing its info in ViewModel
 	function createMarker(place) {
     	var marker = new google.maps.Marker({
       		position: place.geometry.location,
@@ -67,12 +78,15 @@ function initMap() {
         	icon: defaultIcon
     	});
     	ViewModel.placeList.push(marker);
+        // hovering over
     	marker.addListener('mouseover', function() {
         	this.setIcon(highlightedIcon);
     	});
+        // mouse out event
     	marker.addListener('mouseout', function() {
         	this.setIcon(defaultIcon);
     	});
+        // click to pop info window
     	marker.addListener('click', function(){
         	populateInfoWindow(this, largeInfowindow);
     	});
@@ -80,13 +94,19 @@ function initMap() {
 	}
 }
 
+// active when user click on either marker or list
 function populateInfoWindow(marker, infowindow) {
+    // first check if this is a new marker clicked
     if (infowindow.marker != marker) {
     	if (current_marker != null) {
+            // set previous clicked marker to default icon
     		current_marker.setIcon(defaultIcon);
     	}
+        // set current marker
     	current_marker = marker;
+        // highlight current marker
     	current_marker.setIcon(highlightedIcon);
+        // change infowindow to point to current marker
         infowindow.marker = marker;
 
 	    // make marker bouncing for 750ms
@@ -105,11 +125,13 @@ function populateInfoWindow(marker, infowindow) {
         var f2_url = 'https://api.foursquare.com/v2/venues/search?ll='+
         	lat+','+lng+'&client_id='+f2_id+'&client_secret='+f2_secret+'&llAcc=1&v=20171003';
         $.getJSON(f2_url, function(data1){
+            // select the first returned venue
         	var venue_id = data1.response.venues[0].id;
+            // another Foursquare API request here to gather more info of selected venue
         	var venue_query_url = 'https://api.foursquare.com/v2/venues/'+venue_id+'?client_id='
         		+f2_id+'&client_secret='+f2_secret+'&v=20171003';
         	$.getJSON(venue_query_url, function(data2){
-        		// Get F2 rating and url from response
+        		// Get Foursquare rating and url from response
         		var rating = data2.response.venue.rating;
         		var f2Url = data2.response.venue.canonicalUrl;
         		infowindow.setContent('<div>' + marker.title + '</div><div><a href="'+f2Url+'">Foursquare Rating: '+rating+'</a></div>');
@@ -500,5 +522,6 @@ var styles = [
     }
 ];
 
+// client id and secret of Foursquare API
 var f2_id = 'NVGB1FWN4PZ0IQONSNOOID2ZHFF0DS0GO2OIUZHXAXECQ1VC';
 var f2_secret = 'FREG5SGHVEIXTOWMCTSEKSL4CPB2K5AU5CNHK4ZP5JXOF0V3';

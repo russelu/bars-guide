@@ -25,3 +25,5 @@ You can also select any of the filtered (or original list of) bars by clicking i
 5. Asynchronized Google Maps requests for bar lists.
 Instead of storing list of info of bars locally, this app will automatically grab the Google search results when you first open it.
 But I still have a default_list of places stored locally, in case anything breaks.
+
+6. Assasin's Creed theme style Google Maps layout
